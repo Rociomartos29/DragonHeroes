@@ -51,6 +51,9 @@
                             </constraints>
                             <state key="normal" title="Button"/>
                             <buttonConfiguration key="configuration" style="filled" title="Continuar"/>
+                            <connections>
+                                <action selector="didTapContinueButton:" destination="-1" eventType="touchUpInside" id="JDt-xy-2xa"/>
+                            </connections>
                         </button>
                     </subviews>
                 </stackView>

@@ -56,6 +56,43 @@ final class LoginViewController: UIViewController {
             }
         }
     }
+    func loginUser() {
+
+        guard let email = emailTextField.text,
+              let password = passwordTextField.text else {
+          return
+        }
+
+        model.login(
+           user: emailTextField.text ?? "",
+           password: passwordTextField.text ?? ""
+         ) { [weak self] result in
+
+           guard let self = self else { return }
+
+             NetworkModel.shared.login(user: email, password: password) { [weak self] result in
+
+               guard let self = self else { return }
+
+               switch result {
+
+                 case .success(let token):
+                   // Navegar al listado de héroes
+                   let heroesListVC = HeroesListViewController()
+                   self.navigationController?.pushViewController(heroesListVC, animated: true)
+
+                 case .failure(let error):
+                   // Manejar el error
+                   print(error)
+
+               }
+
+             }
+            
+      }
+
+    }
+
 }
 
 // MARK: - Animations
@@ -83,4 +120,41 @@ extension LoginViewController {
         }
     }
 }
+struct LoginResponse: Decodable {
+  let token: String
+}
 
+func login(username: String, password: String) {
+
+  // 1. Construir URL
+  let url = URL(string: "https://dragonball.keepcoding.education/api/login")!
+  
+  // 2. Configurar el request
+  var request = URLRequest(url: url)
+  request.httpMethod = "POST"
+  
+  let bodyData = "username=\(username)&password=\(password)"
+  request.httpBody = bodyData.data(using: .utf8)
+  
+  // 3. Hacer request con URLSession
+  let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+  
+    // 4. Verificar respuesta
+    guard let data = data, error == nil else {
+      print(error?.localizedDescription ?? "Error desconocido")
+      return
+    }
+    
+    // 5. Decodificar respuesta JSON
+    do {
+      let json = try JSONDecoder().decode(LoginResponse.self, from: data)
+      print("Login exitoso, token: ", json.token)
+    } catch {
+      print("Error decodificando JSON", error)
+    }
+  }
+  
+  // 6. Comenzar tarea
+  task.resume()
+  
+}
