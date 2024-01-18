@@ -14,8 +14,8 @@ var transformationsCoordinator: TransformationsCoordinator?
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    NetworkModel.shared.getTransformations(forHero: hero) { result in
+      let token = NetworkModel.shared.token
+      NetworkModel.shared.getTransformations( forHero: hero) { result in
       
       // Crear un coordinador para SwiftUI
         switch result {

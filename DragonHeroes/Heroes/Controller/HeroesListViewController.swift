@@ -32,12 +32,14 @@ class HeroesListViewController: UICollectionViewController {
         //MARK: - View Lifecycle
         override func viewDidLoad() {
             super.viewDidLoad()
+            print("Estoy funcionando")
             
             configureDataSource()
             fetchHeroes()
         }
         
         //MARK: - Configuration Methods
+    
         private func configureCollectionView() {
             collectionView.contentInset.left = 16
             collectionView.contentInset.right = 16
@@ -67,7 +69,7 @@ class HeroesListViewController: UICollectionViewController {
         
         //MARK: - Data Fetching
     private func fetchHeroes() {
-        let networkModel = NetworkModel()  // Crear una instancia de NetworkModel
+        let networkModel = NetworkModel()
         networkModel.getHeroes { [weak self] (result: Result<[DragonBallHero], DragonBallError>) in
             switch result {
             case let .success(heroes):
@@ -93,8 +95,8 @@ class HeroesListViewController: UICollectionViewController {
         guard let heroSelected = dataSource?.itemIdentifier(for: indexPath) else { return }
         
         let networkModel = NetworkModel()  // Crear una instancia de NetworkModel
-        
-        networkModel.getTransformations(forHero: heroSelected) { [weak self] result in
+        let token = NetworkModel.shared.token
+        networkModel.getTransformations( forHero: heroSelected) { [weak self] result in
             switch result {
             case let .success(listadoTransform):
                 DispatchQueue.main.async {

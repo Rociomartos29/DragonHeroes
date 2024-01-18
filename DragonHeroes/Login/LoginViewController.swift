@@ -38,8 +38,8 @@ final class LoginViewController: UIViewController {
     
     @IBAction func didTapContinueButton(_ sender: Any) {
         zoomOut()
-        // NO ANIDEIS LAS LLAMADAS EN EL LOGIN
-        // Debeis hacer una llamada por ViewController
+        let heroesListVC = HeroesListViewController()
+        navigationController?.pushViewController(heroesListVC, animated: true);
         model.login(
             user: emailTextField.text ?? "",
             password: passwordTextField.text ?? ""

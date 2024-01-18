@@ -7,12 +7,11 @@
 
 import Foundation
 final class NetworkModel {
-    // Creamos un singleton de NetworkModel
-    // Singleton significa que esta instancia va a estar "viva"
-    // durante todo el ciclo de vida de la aplicacion
+    var authToken: String?
+
     static let shared = NetworkModel()
     
-    private var token: String? {
+     var token: String? {
         get {
             if let token = LocalDataModel.getToken() {
                 return token
@@ -80,47 +79,40 @@ final class NetworkModel {
         }
     }
     func getTransformations(forHero hero: DragonBallHero, completion: @escaping (Result<[HeroTransformation], Error>) -> Void) {
-        
-        // Configurar URL
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "/dragonball.keepcoding.education"
-        components.path = "/heroes/\(hero.id)/transformations"
-        
-        guard let url = components.url else {
-            completion(.failure(URLError(.badURL)))
-            return
+
+      // Construir URL
+      guard let url = URL(string: "https://dragonball.keepcoding.education/heroes/\(hero.id)/transformations") else {
+        completion(.failure(URLError(.badURL)))
+        return
+      }
+
+      // Configurar request
+      var request = URLRequest(url: url)
+      request.httpMethod = "GET"
+      
+      // Agregar token al header
+      request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
+
+      // Hacer request
+      let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+
+        guard let data = data, error == nil else {
+          completion(.failure(error!))
+          return
         }
-        
-        // Configurar request
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(String(describing: token))", forHTTPHeaderField: "Authorization")
-        
-        // Hacer request
-        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-            
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(URLError(.badServerResponse)))
-                return
-            }
-            
-            do {
-                let transformations = try JSONDecoder().decode([HeroTransformation].self, from: data)
-                completion(.success(transformations))
-            } catch {
-                completion(.failure(error))
-            }
-            
+
+        // Parsear respuesta JSON
+        do {
+          let transformations = try JSONDecoder().decode([HeroTransformation].self, from: data)
+          completion(.success(transformations))
+        } catch {
+          completion(.failure(error))
         }
-        
-        task.resume()
-        
+
+      }
+
+      task.resume()
+
     }
     
     func getHeroes(
