@@ -68,19 +68,20 @@ final class LoginViewController: UIViewController {
            password: passwordTextField.text ?? ""
          ) { [weak self] result in
 
-           guard let self = self else { return }
+           //guard let self = self else { return }
 
              NetworkModel.shared.login(user: email, password: password) { [weak self] result in
 
-               guard let self = self else { return }
+                 // guard let self = self else { return }
 
                switch result {
 
-                 case .success(let token):
+                 case .success:
                    // Navegar al listado de héroes
-                   let heroesListVC = HeroesListViewController()
-                   self.navigationController?.pushViewController(heroesListVC, animated: true)
-
+                   DispatchQueue.main.async{
+                       let heroesListVC = HeroesListViewController();
+                       self?.navigationController?.setViewControllers([heroesListVC], animated: true)
+                   }
                  case .failure(let error):
                    // Manejar el error
                    print(error)

@@ -119,7 +119,7 @@ final class NetworkModel {
         completion: @escaping (Result<[DragonBallHero], DragonBallError>) -> Void
     ) {
         var components = baseComponents
-        components.path = "https://dragonball.keepcoding.education/api/heros/all"
+        components.path = "/api/heros/all"
         
         guard let url = components.url else {
             completion(.failure(.malformedURL))
@@ -131,10 +131,10 @@ final class NetworkModel {
             return
         }
 
-        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
-        urlComponents?.queryItems = [URLQueryItem(name: "name", value: "")]
+        var urlComponents = URLComponents()
+        urlComponents.queryItems = [URLQueryItem(name: "name", value: "")]
         
-        guard let finalURL = urlComponents?.url else {
+        guard let finalURL = urlComponents.url else {
             completion(.failure(.malformedURL))
             return
         }
@@ -146,4 +146,29 @@ final class NetworkModel {
    
         client.request(urlRequest, using: [DragonBallHero].self, completion: completion)
     }
+    func getModel(
+            completion: @escaping (Result<[DragonBallHero], DragonBallError>) -> Void
+        ) {
+            var components = baseComponents
+            components.path = "/api/heros/all"
+            guard let url = components.url else {
+                completion(.failure(.malformedURL))
+                return
+            }
+
+            guard let token else {
+                completion(.failure(.unknown))
+                return
+            }
+
+            var urlComponents = URLComponents()
+            urlComponents.queryItems = [URLQueryItem(name: "name", value: "")]
+
+            var urlRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "POST"
+            urlRequest.setValue("Bearer (token)", forHTTPHeaderField: "Authorization")
+            urlRequest.httpBody = urlComponents.query?.data(using: .utf8)
+
+            client.request(urlRequest, using: [DragonBallHero].self, completion: completion)
+        }
 }

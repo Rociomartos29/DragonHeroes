@@ -20,8 +20,8 @@ class HeroesListViewController: UICollectionViewController {
             layout.scrollDirection = .vertical
             super.init(collectionViewLayout: layout)
             
-            configureCollectionView()
-            configureNavigationBar()
+            //configureCollectionView()
+           // configureNavigationBar()
         }
         
         @available(*, unavailable)
@@ -36,6 +36,7 @@ class HeroesListViewController: UICollectionViewController {
             
             configureDataSource()
             fetchHeroes()
+            
         }
         
         //MARK: - Configuration Methods
@@ -56,9 +57,27 @@ class HeroesListViewController: UICollectionViewController {
         }
         
         private func configureDataSource() {
-            let registration = UICollectionView.CellRegistration<CeldaCollectionViewCell, DragonBallHero> { cell, _, hero in
-                cell.configure(with: hero)
-            }
+            /*let registration = UICollectionView.CellRegistration<
+                        CharacterCollectionViewCell,
+                        GOTCharacter
+                    >(
+                        cellNib: UINib(
+                            nibName: CharacterCollectionViewCell.identifier,
+                            bundle: nil
+                        )
+                    ) { cell, _, character in
+                        cell.configure(with: character)
+                    }*/
+            
+            
+            let registration = UICollectionView.CellRegistration<CeldaCollectionViewCell, DragonBallHero> (
+            cellNib: UINib(
+                nibName: "CeldaCollectionViewCell",
+                bundle: nil)){
+                    
+                    cell, _, hero in
+                    cell.configure(with: hero)
+                }
             
             dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, hero in
                 collectionView.dequeueConfiguredReusableCell(using: registration, for: indexPath, item: hero)
@@ -70,13 +89,16 @@ class HeroesListViewController: UICollectionViewController {
         //MARK: - Data Fetching
     private func fetchHeroes() {
         let networkModel = NetworkModel()
-        networkModel.getHeroes { [weak self] (result: Result<[DragonBallHero], DragonBallError>) in
+        networkModel.getModel { [weak self] (result: Result<[DragonBallHero], DragonBallError>) in
             switch result {
             case let .success(heroes):
-                var snapshot = Snapshot()
-                snapshot.appendSections([0])
-                snapshot.appendItems(heroes)
-                self?.dataSource?.apply(snapshot)
+                print(heroes)
+                DispatchQueue.main.async{
+                    var snapshot = Snapshot()
+                    snapshot.appendSections([0])
+                    snapshot.appendItems(heroes)
+                    self?.dataSource?.apply(snapshot)
+                }
             case let .failure(error):
                 print(error)
             }
