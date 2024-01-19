@@ -33,6 +33,7 @@ final class NetworkModel {
         return components
     }
     
+    
     private let client: APIClientProtocol
     
     // Ponemos el inicializador privado, para prevenir
