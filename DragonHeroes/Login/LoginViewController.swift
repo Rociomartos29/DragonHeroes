@@ -147,6 +147,7 @@ func login(username: String, password: String) {
     }
     
     // 5. Decodificar respuesta JSON
+      
     do {
       let json = try JSONDecoder().decode(LoginResponse.self, from: data)
       print("Login exitoso, token: ", json.token)

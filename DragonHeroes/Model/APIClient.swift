@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 // MARK: - Custom Error
 enum DragonBallError: Error {
     case malformedURL
@@ -14,6 +15,7 @@ enum DragonBallError: Error {
     case decodingFailed
     case encodingFailed
     case unknown
+    case invalidToken
 }
 
 extension DragonBallError {

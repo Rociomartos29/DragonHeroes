@@ -9,18 +9,18 @@ import UIKit
 class TransformationsView: UIView {
 
   // aquí puedes agregar subvistas, constraints, etc
-    let coordinator: TransformationsCoordinator?
+   // let coordinator: TransformationsCoordinator?
       
-      init(coordinator: TransformationsCoordinator?) {
-        self.coordinator = coordinator
-          super.init(frame: .zero)
+      ///init(coordinator: TransformationsCoordinator?) {
+        ///self.coordinator = coordinator
+         /// super.init(frame: .zero)
       }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+   /// required init?(coder: NSCoder) {
+      ///  fatalError("init(coder:) has not been implemented")
+    ///}
     
-    }
+
 
   
    

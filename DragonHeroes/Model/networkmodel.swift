@@ -4,14 +4,15 @@
 //
 //  Created by Rocio Martos on 16/1/24.
 //
-
 import Foundation
-final class NetworkModel {
-    var authToken: String?
 
+final class NetworkModel {
+    // Creamos un singleton de NetworkModel
+    // Singleton significa que esta instancia va a estar "viva"
+    // durante todo el ciclo de vida de la aplicacion
     static let shared = NetworkModel()
     
-     var token: String? {
+    var token: String? {
         get {
             if let token = LocalDataModel.getToken() {
                 return token
@@ -53,6 +54,7 @@ final class NetworkModel {
             return
         }
         
+        // Creamos un string cuyo formato sea %@:%@
         
         let loginString = String(format: "%@:%@", user, password)
         // Encodificamos el login string a un objeto Data
@@ -78,97 +80,86 @@ final class NetworkModel {
             }
         }
     }
-    func getTransformations(forHero hero: DragonBallHero, completion: @escaping (Result<[HeroTransformation], Error>) -> Void) {
-
-      // Construir URL
-      guard let url = URL(string: "https://dragonball.keepcoding.education/heroes/\(hero.id)/transformations") else {
-        completion(.failure(URLError(.badURL)))
-        return
-      }
-
-      // Configurar request
-      var request = URLRequest(url: url)
-      request.httpMethod = "GET"
-      
-      // Agregar token al header
-      request.setValue("Bearer \(authToken)", forHTTPHeaderField: "Authorization")
-
-      // Hacer request
-      let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
-
-        guard let data = data, error == nil else {
-          completion(.failure(error!))
-          return
-        }
-
-        // Parsear respuesta JSON
-        do {
-          let transformations = try JSONDecoder().decode([HeroTransformation].self, from: data)
-          completion(.success(transformations))
-        } catch {
-          completion(.failure(error))
-        }
-
-      }
-
-      task.resume()
-
-    }
     
     func getHeroes(
         completion: @escaping (Result<[DragonBallHero], DragonBallError>) -> Void
     ) {
         var components = baseComponents
         components.path = "/api/heros/all"
-        
         guard let url = components.url else {
             completion(.failure(.malformedURL))
             return
         }
-    
-        guard let token = self.token else {
+        
+        guard let token else {
             completion(.failure(.unknown))
             return
         }
-
+        
+        // Crear un objeto URLComponents, para encodificarlo posteriormente
         var urlComponents = URLComponents()
         urlComponents.queryItems = [URLQueryItem(name: "name", value: "")]
         
-        guard let finalURL = urlComponents.url else {
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        // Encodificamos el query item de url components
+        urlRequest.httpBody = urlComponents.query?.data(using: .utf8)
+        
+        client.request(urlRequest, using: [DragonBallHero].self, completion: completion)
+    }
+    func getTransformations(completion: @escaping (Result<[HeroTransformation], DragonBallError>)->Void){
+        var components = baseComponents
+        components.path = "/api/heros/tranformations"
+        guard let url = components.url else{
             completion(.failure(.malformedURL))
             return
         }
-
-        var urlRequest = URLRequest(url: finalURL)
-        urlRequest.httpMethod = "POST"
-
-        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-   
-        client.request(urlRequest, using: [DragonBallHero].self, completion: completion)
-    }
-    func getModel(
-            completion: @escaping (Result<[DragonBallHero], DragonBallError>) -> Void
-        ) {
-            var components = baseComponents
-            components.path = "/api/heros/all"
-            guard let url = components.url else {
-                completion(.failure(.malformedURL))
-                return
-            }
-
-            guard let token else {
-                completion(.failure(.unknown))
-                return
-            }
-
-            var urlComponents = URLComponents()
-            urlComponents.queryItems = [URLQueryItem(name: "name", value: "")]
-
-            var urlRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "POST"
-            urlRequest.setValue("Bearer (token)", forHTTPHeaderField: "Authorization")
-            urlRequest.httpBody = urlComponents.query?.data(using: .utf8)
-
-            client.request(urlRequest, using: [DragonBallHero].self, completion: completion)
+        guard let token else{
+            completion(.failure(.unknown))
+            return
         }
+        var urlComponents = URLComponents()
+        urlComponents.queryItems = [URLQueryItem(name: "name", value: "")]
+        
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        // Encodificamos el query item de url components
+        urlRequest.httpBody = urlComponents.query?.data(using: .utf8)
+        
+        client.request(urlRequest, using: [HeroTransformation].self, completion: completion)
+    }
+    func fetchData(completion: @escaping (Result<Data, DragonBallError>) -> Void) {
+        var components = baseComponents
+        guard let url = components.url else { completion(.failure(.malformedURL))
+            return}
+        let request = URLRequest(url: url)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            var result: Result<Data, DragonBallError> =  .failure(.unknown)
+            if let error = error {
+                  // Error
+                result = .failure(.unknown)
+                } else if let data = data {
+                  // Éxito
+                  result = .success(data)
+
+                  // Imprimir data
+                  print(String(data: data, encoding: .utf8)!)
+
+                }
+
+                // 5. Pasar resultado completo
+                completion(result)
+              }
+
+              // 6. Ejecutar tarea
+              task.resume()
+
+            }
 }
+
+
+
+

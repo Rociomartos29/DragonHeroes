@@ -4,8 +4,8 @@
 //
 //  Created by Rocio Martos on 16/1/24.
 //
-
 import Foundation
+
 struct LocalDataModel {
     private enum Constants {
         static let tokenKey = "KCToken"
@@ -25,3 +25,4 @@ struct LocalDataModel {
         userDefaults.removeObject(forKey: Constants.tokenKey)
     }
 }
+

@@ -11,9 +11,9 @@ class HeroesListViewController: UICollectionViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Int, DragonBallHero>
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, DragonBallHero>
     
+    private let networkmodel = NetworkModel()
     private let model = NetworkModel.shared
     private var dataSource: DataSource?
-    
     init() {
             let layout = UICollectionViewFlowLayout()
             layout.itemSize = CGSize(width: 175, height: 175)
@@ -34,8 +34,19 @@ class HeroesListViewController: UICollectionViewController {
             super.viewDidLoad()
             print("Estoy funcionando")
             
+            
+            
+            setupView()
             configureDataSource()
             fetchHeroes()
+            model.fetchData { result in
+                switch result {
+                  case .success(let data):
+                    print(String(data: data, encoding: .utf8)!)
+                  case .failure(let error):
+                    print(error)
+                }
+              }
             
         }
         
@@ -88,8 +99,7 @@ class HeroesListViewController: UICollectionViewController {
         
         //MARK: - Data Fetching
     private func fetchHeroes() {
-        let networkModel = NetworkModel()
-        networkModel.getModel { [weak self] (result: Result<[DragonBallHero], DragonBallError>) in
+        model.getHeroes { [weak self] (result: Result<[DragonBallHero], DragonBallError>) in
             switch result {
             case let .success(heroes):
                 print(heroes)
@@ -114,20 +124,26 @@ class HeroesListViewController: UICollectionViewController {
         
         //MARK: - Navigation
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let heroSelected = dataSource?.itemIdentifier(for: indexPath) else { return }
+        guard (dataSource?.itemIdentifier(for: indexPath)) != nil else { return }
         
-        let networkModel = NetworkModel()  // Crear una instancia de NetworkModel
-        let token = NetworkModel.shared.token
-        networkModel.getTransformations( forHero: heroSelected) { [weak self] result in
+        _ = NetworkModel()  // Crear una instancia de NetworkModel
+        _ = NetworkModel.shared.token
+        /*networkModel.getTransformations( forHero: heroSelected) { [weak self] result in
             switch result {
             case let .success(listadoTransform):
                 DispatchQueue.main.async {
                     let heroDetailViewController = HDetailViewController(hero: heroSelected, transformations: listadoTransform)
                     self?.navigationController?.show(heroDetailViewController, sender: nil)
+                    }
                 }
             case let .failure(error):
-                print(error)
-            }
+                print(error)*/
+            
         }
+    }
+
+private extension HeroesListViewController{
+    func setupView (){
+        title = "Heroes"
     }
 }

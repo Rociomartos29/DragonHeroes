@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct DragonBallHero:Codable{
+struct DragonBallHero:Codable, Hashable{
     
     let photo: String
     let id, name, description: String
@@ -16,4 +16,4 @@ struct DragonBallHero:Codable{
     
 }
 
-extension DragonBallHero: Hashable{}
+
