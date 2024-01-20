@@ -113,5 +113,53 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EDB09C39-EA1B-4D6A-98F3-043147E1D813"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "DragonHeroes/Heroes/Controller/ListaHeroesTableViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "fetchData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "EDB09C39-EA1B-4D6A-98F3-043147E1D813 - 31e49944595555b1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;DragonHeroes.DragonBallHero&gt;, DragonHeroes.DragonBallError&gt;) -&gt; () in DragonHeroes.ListaHeroesTableViewController.fetchData() -&gt; ()"
+                  moduleName = "DragonHeroes"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rociomartos/Desktop/DragonHeroes/DragonHeroes/Heroes/Controller/ListaHeroesTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "352">
+               </Location>
+               <Location
+                  uuid = "EDB09C39-EA1B-4D6A-98F3-043147E1D813 - 31e49944595555b1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Swift.Array&lt;DragonHeroes.DragonBallHero&gt;, DragonHeroes.DragonBallError&gt;) -&gt; () in DragonHeroes.ListaHeroesTableViewController.fetchData() -&gt; ()"
+                  moduleName = "DragonHeroes"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/rociomartos/Desktop/DragonHeroes/DragonHeroes/Heroes/Controller/ListaHeroesTableViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "416">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

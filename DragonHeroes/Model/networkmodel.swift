@@ -10,8 +10,9 @@ final class NetworkModel {
     // Creamos un singleton de NetworkModel
     // Singleton significa que esta instancia va a estar "viva"
     // durante todo el ciclo de vida de la aplicacion
-    static let shared = NetworkModel()
     
+    static let shared = NetworkModel()
+   
     var token: String? {
         get {
             if let token = LocalDataModel.getToken() {
@@ -80,19 +81,27 @@ final class NetworkModel {
                 completion(.failure(error))
             }
         }
-    }
+        let expiryDate = Date().addingTimeInterval(3600)
+          UserDefaults.standard.set(expiryDate, forKey:"expiryDate")
+
+        }
+
+        // Verificar expiración
     
     func getHeroes(
         completion: @escaping (Result<[DragonBallHero], DragonBallError>) -> Void
     ) {
+        
         var components = baseComponents
         components.path = "/api/heros/all"
         guard let url = components.url else {
             completion(.failure(.malformedURL))
             return
         }
+        print("URL: \(url)")
         
-        guard let token else {
+        
+        guard let token = self.token else {
             completion(.failure(.unknown))
             return
         }
@@ -102,13 +111,21 @@ final class NetworkModel {
         urlComponents.queryItems = [URLQueryItem(name: "name", value: "")]
         
         var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        // Encodificamos el query item de url components
+            urlRequest.httpMethod = "POST"
+            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         urlRequest.httpBody = urlComponents.query?.data(using: .utf8)
-        
+        print("Request: \(urlRequest)")
         client.request(urlRequest, using: [DragonBallHero].self, completion: completion)
-    }
+        /*{ result in
+                switch result {
+                case let .success(heroes):
+                    completion(.success(heroes))
+                case let .failure(error):
+                    completion(.failure(error))
+                }
+            }*/
+        
+        }
     func getTransformations(completion: @escaping (Result<[HeroTransformation], DragonBallError>)->Void){
         var components = baseComponents
         components.path = "/api/heros/tranformations"
@@ -133,32 +150,33 @@ final class NetworkModel {
     }
     func fetchData(completion: @escaping (Result<Data, DragonBallError>) -> Void) {
         var components = baseComponents
-        guard let url = components.url else { completion(.failure(.malformedURL))
-            return}
-        let request = URLRequest(url: url)
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            var result: Result<Data, DragonBallError> =  .failure(.unknown)
+        guard let url = components.url else {
+            completion(.failure(.malformedURL))
+            return
+        }
+
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "GET"
+
+        let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
+            var result: Result<Data, DragonBallError> = .failure(.unknown)
+
             if let error = error {
-                  // Error
                 result = .failure(.unknown)
-                } else if let data = data {
-                  // Éxito
-                  result = .success(data)
-
-                  // Imprimir data
-                  print(String(data: data, encoding: .utf8)!)
-
-                }
-
-                // 5. Pasar resultado completo
-                completion(result)
-              }
-
-              // 6. Ejecutar tarea
-              task.resume()
-
+            } else if let data = data {
+                result = .success(data)
             }
+
+            // Realizar la llamada a completion en el hilo principal
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+
+        task.resume()
+    }
+
+   
 }
 
 

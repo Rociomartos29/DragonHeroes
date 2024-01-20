@@ -79,7 +79,9 @@ struct APIClient: APIClientProtocol {
             guard let data else {
                 result = .failure(.noData)
                 return
+                
             }
+            print(String(data: data, encoding: .utf8))
             
             let statusCode = (response as? HTTPURLResponse)?.statusCode
             
@@ -88,7 +90,7 @@ struct APIClient: APIClientProtocol {
                 return
             }
             
-            guard let resource = try? JSONDecoder().decode(type, from: data) else {
+            guard let resource = try? JSONDecoder().decode(T.self, from: data) else {
                 result = .failure(.decodingFailed)
                 return
             }

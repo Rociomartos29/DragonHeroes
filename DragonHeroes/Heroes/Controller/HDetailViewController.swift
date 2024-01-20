@@ -16,7 +16,8 @@ class HDetailViewController: UIViewController {
     var hero: DragonBallHero!
     init(hero: DragonBallHero, transformations: [HeroTransformation]) {
         // Código de inicialización aquí
-        super.init(nibName: nil, bundle: nil) // Llamada al inicializador designado de UIViewController
+        super.init(nibName: nil, bundle: nil)
+        self.hero = hero // Llamada al inicializador designado de UIViewController
     }
     
     // Inicializador requerido para conformar al protocolo NSCoding
@@ -27,11 +28,11 @@ class HDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if hero.transformations.isEmpty {
-            transformationsButton.isHidden = true
-        }
+        ///if hero.transformations.isEmpty {
+        /// transformationsButton.isHidden = true
     }
-    @IBAction func showTransformationsTapped() {
+    
+    func showTransformationsTapped() {
         
         /* let transformationsListVC = TransformacionesListTableViewController()
          transformationsListVC.hero = hero
@@ -44,4 +45,5 @@ class HDetailViewController: UIViewController {
           }
           */*/
     }
+    
 }

@@ -38,7 +38,7 @@ final class LoginViewController: UIViewController {
     
     @IBAction func didTapContinueButton(_ sender: Any) {
         zoomOut()
-        let heroesListVC = HeroesListViewController()
+        let heroesListVC = HeroCollectionViewController()
         navigationController?.pushViewController(heroesListVC, animated: true);
         model.login(
             user: emailTextField.text ?? "",
@@ -79,7 +79,7 @@ final class LoginViewController: UIViewController {
                  case .success:
                    // Navegar al listado de héroes
                    DispatchQueue.main.async{
-                       let heroesListVC = HeroesListViewController();
+                       let heroesListVC = HeroCollectionViewController();
                        self?.navigationController?.setViewControllers([heroesListVC], animated: true)
                    }
                  case .failure(let error):

@@ -24,5 +24,6 @@ struct LocalDataModel {
     static func deleteToken() {
         userDefaults.removeObject(forKey: Constants.tokenKey)
     }
+    
 }
 

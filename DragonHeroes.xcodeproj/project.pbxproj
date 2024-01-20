@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		36A62F592B58295D004E2CC7 /* HeroesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A62F572B58295D004E2CC7 /* HeroesListViewController.swift */; };
-		36A62F5A2B58295D004E2CC7 /* HeroesListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36A62F582B58295D004E2CC7 /* HeroesListViewController.xib */; };
 		36A62F5D2B5829A9004E2CC7 /* TransformacionesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A62F5B2B5829A9004E2CC7 /* TransformacionesListViewController.swift */; };
 		36A62F5E2B5829A9004E2CC7 /* TransformacionesListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36A62F5C2B5829A9004E2CC7 /* TransformacionesListViewController.xib */; };
 		36A62F692B584028004E2CC7 /* HDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A62F672B584028004E2CC7 /* HDetailViewController.swift */; };
@@ -19,6 +17,8 @@
 		36A62F722B58435E004E2CC7 /* TransformationsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36A62F702B58435E004E2CC7 /* TransformationsViewController.xib */; };
 		36A62F752B584998004E2CC7 /* CeldaCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A62F732B584998004E2CC7 /* CeldaCollectionViewCell.swift */; };
 		36A62F762B584998004E2CC7 /* CeldaCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36A62F742B584998004E2CC7 /* CeldaCollectionViewCell.xib */; };
+		36A9ED052B5BF6EF009D500D /* HeroCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36A9ED032B5BF6EF009D500D /* HeroCollectionViewController.swift */; };
+		36A9ED062B5BF6EF009D500D /* HeroCollectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 36A9ED042B5BF6EF009D500D /* HeroCollectionViewController.xib */; };
 		36F53A982B57115F004C4B64 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F53A972B57115F004C4B64 /* AppDelegate.swift */; };
 		36F53A9A2B57115F004C4B64 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F53A992B57115F004C4B64 /* SceneDelegate.swift */; };
 		36F53AA12B571161004C4B64 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 36F53AA02B571161004C4B64 /* Assets.xcassets */; };
@@ -53,8 +53,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		36A62F572B58295D004E2CC7 /* HeroesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroesListViewController.swift; sourceTree = "<group>"; };
-		36A62F582B58295D004E2CC7 /* HeroesListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeroesListViewController.xib; sourceTree = "<group>"; };
 		36A62F5B2B5829A9004E2CC7 /* TransformacionesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransformacionesListViewController.swift; sourceTree = "<group>"; };
 		36A62F5C2B5829A9004E2CC7 /* TransformacionesListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransformacionesListViewController.xib; sourceTree = "<group>"; };
 		36A62F672B584028004E2CC7 /* HDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDetailViewController.swift; sourceTree = "<group>"; };
@@ -65,6 +63,8 @@
 		36A62F702B58435E004E2CC7 /* TransformationsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TransformationsViewController.xib; sourceTree = "<group>"; };
 		36A62F732B584998004E2CC7 /* CeldaCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CeldaCollectionViewCell.swift; sourceTree = "<group>"; };
 		36A62F742B584998004E2CC7 /* CeldaCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CeldaCollectionViewCell.xib; sourceTree = "<group>"; };
+		36A9ED032B5BF6EF009D500D /* HeroCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCollectionViewController.swift; sourceTree = "<group>"; };
+		36A9ED042B5BF6EF009D500D /* HeroCollectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeroCollectionViewController.xib; sourceTree = "<group>"; };
 		36F53A942B57115F004C4B64 /* DragonHeroes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DragonHeroes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36F53A972B57115F004C4B64 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		36F53A992B57115F004C4B64 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -127,9 +127,10 @@
 			children = (
 				36A62F652B583292004E2CC7 /* Controller */,
 				36A62F682B584028004E2CC7 /* HDetailViewController.xib */,
-				36A62F582B58295D004E2CC7 /* HeroesListViewController.xib */,
 				36A62F732B584998004E2CC7 /* CeldaCollectionViewCell.swift */,
 				36A62F742B584998004E2CC7 /* CeldaCollectionViewCell.xib */,
+				36A9ED032B5BF6EF009D500D /* HeroCollectionViewController.swift */,
+				36A9ED042B5BF6EF009D500D /* HeroCollectionViewController.xib */,
 			);
 			path = Heroes;
 			sourceTree = "<group>";
@@ -137,7 +138,6 @@
 		36A62F652B583292004E2CC7 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				36A62F572B58295D004E2CC7 /* HeroesListViewController.swift */,
 				36A62F672B584028004E2CC7 /* HDetailViewController.swift */,
 			);
 			path = Controller;
@@ -322,12 +322,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				36A9ED062B5BF6EF009D500D /* HeroCollectionViewController.xib in Resources */,
 				36A62F5E2B5829A9004E2CC7 /* TransformacionesListViewController.xib in Resources */,
 				36A62F722B58435E004E2CC7 /* TransformationsViewController.xib in Resources */,
 				36A62F6E2B58414C004E2CC7 /* TransformacionesDetailViewController.xib in Resources */,
 				36F53AA42B571161004C4B64 /* LaunchScreen.storyboard in Resources */,
 				36F53AA12B571161004C4B64 /* Assets.xcassets in Resources */,
-				36A62F5A2B58295D004E2CC7 /* HeroesListViewController.xib in Resources */,
 				36A62F762B584998004E2CC7 /* CeldaCollectionViewCell.xib in Resources */,
 				36A62F6A2B584028004E2CC7 /* HDetailViewController.xib in Resources */,
 				36F53ACA2B5712D5004C4B64 /* LoginViewController.xib in Resources */,
@@ -363,11 +363,11 @@
 				36F53A9A2B57115F004C4B64 /* SceneDelegate.swift in Sources */,
 				36F53AD02B57184A004C4B64 /* LocalData.swift in Sources */,
 				36F53AD22B571893004C4B64 /* Hero.swift in Sources */,
+				36A9ED052B5BF6EF009D500D /* HeroCollectionViewController.swift in Sources */,
 				36A62F6D2B58414C004E2CC7 /* TransformacionesDetailViewController.swift in Sources */,
 				36F53AD42B5718CA004C4B64 /* transformacion.swift in Sources */,
 				36A62F692B584028004E2CC7 /* HDetailViewController.swift in Sources */,
 				36F53ACE2B571758004C4B64 /* networkmodel.swift in Sources */,
-				36A62F592B58295D004E2CC7 /* HeroesListViewController.swift in Sources */,
 				36F53ACC2B5716EA004C4B64 /* APIClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,29 +7,41 @@
 
 import UIKit
 
-class CeldaCollectionViewCell: UICollectionViewCell {
+        
+        class CeldaCollectionViewCell: UICollectionViewCell {
+            static let identifier = "CeldaCollectionViewCell"
+            @IBOutlet weak var NombreHero: UILabel!
+            @IBOutlet weak var ImagenHero: UIImageView!
+            var requestID: UUID?
+            override func awakeFromNib() {
+                super.awakeFromNib()
+                // Initialization code
+            }
+            
+            func configure(with heroe:DragonBallHero){
+                guard let url = URL(string: heroe.photo) else {
+                    print("Invalid image URL: \(heroe.photo)")
+                    return
+                }
+                NombreHero.text = heroe.name
+                ImagenHero.load(from: url)
+                guard let url = URL(string: heroe.photo) else {
+                    print("Invalid image URL: \(heroe.photo)")
+                    return
+                }
+            }
+        }
 
-    @IBOutlet weak var NombreHero: UILabel!
-    @IBOutlet weak var ImagenHero: UIImageView!
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-   
-    func configure(with heroe: DragonBallHero) {
-        NombreHero.text = heroe.name
 
-        if let url = URL(string: heroe.photo) {
-            // Descargar la imagen de forma asíncrona
-            DispatchQueue.global().async {
-                if let data = try? Data(contentsOf: url),
-                   let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        // Asignar la imagen al UIImageView en el hilo principal
-                        self.ImagenHero.image = image
-                    }
+extension UIImageView {
+    func load(from url: URL) {
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: url), let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self?.image = image
                 }
             }
         }
     }
+    
 }
