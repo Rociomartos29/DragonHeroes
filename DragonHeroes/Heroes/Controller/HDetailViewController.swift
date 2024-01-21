@@ -27,12 +27,12 @@ class HDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Configurar la vista con los datos del héroe
+        // Configura la vista con los datos del héroe
         configureView()
     }
     
     func configureView() {
-        // Aquí deberías configurar tus elementos de la interfaz de usuario con los datos del héroe
+        
         guard let url = URL(string: hero.photo) else {
             print("Invalid image URL: \(hero.photo)")
             return
@@ -48,19 +48,26 @@ class HDetailViewController: UIViewController {
     }
     
     func showTransformations() {
-        // Solicitar las transformaciones para el héroe actual
-        model.getTransformations{ [weak self] result in
-            switch result {
-            case let .success(transformations):
-                // Crear instancia de TransformationsViewController y pasar el héroe y las transformaciones
-                DispatchQueue.main.async { [weak self] in
-                    let transformationsListVC = TransformationsViewController(hero: self!.hero, transformations: transformations)
-                    self?.navigationController?.pushViewController(transformationsListVC, animated: true)
+        let heroID = self.hero.id
+        if !heroID.isEmpty {
+            
+            // Solicitar las transformaciones para el héroe actual
+            model.getTransformations(id: heroID) { [weak self] result in
+                switch result {
+                case let .success(transformations):
+                    // Crear instancia de TransformationsViewController y pasar el héroe y las transformaciones
+                    DispatchQueue.main.async { [weak self] in
+                        let transformationsListVC = TransformationsViewController(hero: self!.hero)
+                        self?.navigationController?.pushViewController(transformationsListVC, animated: true)
+                    }
+                    
+                case let .failure(error):
+                    print("Error fetching transformations: \(error)")
                 }
-                
-            case let .failure(error):
-                print("Error fetching transformations: \(error)")
             }
+        }else {
+            print("Error: el ID del héroe es nulo")
         }
     }
 }
+

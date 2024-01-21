@@ -10,7 +10,7 @@ final class NetworkModel {
     // Creamos un singleton de NetworkModel
     // Singleton significa que esta instancia va a estar "viva"
     // durante todo el ciclo de vida de la aplicacion
-    
+
     static let shared = NetworkModel()
    
     var token: String? {
@@ -126,7 +126,8 @@ final class NetworkModel {
             }*/
         
         }
-    func getTransformations(completion: @escaping (Result<[HeroTransformation], DragonBallError>) -> Void){
+    func getTransformations(id: String, completion: @escaping (Result<[HeroTransformation], DragonBallError>) -> Void){
+        
         var components = baseComponents
             components.path = "/api/heros/tranformations"
 
@@ -141,13 +142,18 @@ final class NetworkModel {
             }
         
             
-        var urlComponents = URLComponents()
-        urlComponents.queryItems = [URLQueryItem(name: "id", value: "")]
+        let urlString = "\(url.absoluteString)?id=\(id)"
+            guard let transformedURL = URL(string: urlString) else {
+                completion(.failure(.malformedURL))
+                return
+            }
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+            urlComponents?.queryItems = [URLQueryItem(name: "id", value: id)]
 
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            urlRequest.httpBody = urlComponents.query?.data(using: .utf8)
+        urlRequest.httpBody = urlComponents?.query?.data(using: .utf8)
 
             client.request(urlRequest, using: [HeroTransformation].self) { result in
                 completion(result)
@@ -155,7 +161,7 @@ final class NetworkModel {
         
         }
     func fetchData(completion: @escaping (Result<Data, DragonBallError>) -> Void) {
-        var components = baseComponents
+        let components = baseComponents
         guard let url = components.url else {
             completion(.failure(.malformedURL))
             return
@@ -167,7 +173,7 @@ final class NetworkModel {
         let task = URLSession.shared.dataTask(with: urlRequest) { data, response, error in
             var result: Result<Data, DragonBallError> = .failure(.unknown)
 
-            if let error = error {
+            if error != nil {
                 result = .failure(.unknown)
             } else if let data = data {
                 result = .success(data)

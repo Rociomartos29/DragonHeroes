@@ -12,20 +12,19 @@ class TransformationsCollectionViewCell: UICollectionViewCell {
     static let identifier = "TransformationsCell"
     @IBOutlet weak var NombreHero: UILabel?
     @IBOutlet weak var ImagenHero: UIImageView?
-
-        
-        override func awakeFromNib() {
-            super.awakeFromNib()
-            // Initialization code
-        }
-        
-        func configure(with transformation: HeroTransformation) {
-            guard let url = URL(string: transformation.photo) else {
-                print("Invalid image URL: \(transformation.photo)")
-                return
-            }
-            
-            NombreHero?.text = transformation.name
-            ImagenHero?.load(from: url)
-        }
+    var requestID: UUID?
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
     }
+    
+    func configure(with hero: HeroTransformation) {
+           guard let url = URL(string: hero.photo) else {
+               print("Invalid image URL: \(hero.photo)")
+               return
+           }
+           NombreHero?.text = hero.name
+           ImagenHero?.load(from: url)
+       }
+   }
+

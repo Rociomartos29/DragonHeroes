@@ -6,7 +6,6 @@
 //
 
 import UIKit
-private let reuseIdentifier = "TransformationsCell"
 
 final class TransformationsViewController: UICollectionViewController {
     typealias DataSource = UICollectionViewDiffableDataSource<Int, HeroTransformation>
@@ -15,18 +14,17 @@ final class TransformationsViewController: UICollectionViewController {
     private let model = NetworkModel.shared
     private var dataSource: DataSource?
     private var hero: DragonBallHero
-    private var transformations: [HeroTransformation]
     
-    init(hero: DragonBallHero, transformations: [HeroTransformation]) {
+
+    
+    init(hero: DragonBallHero) {
         self.hero = hero
-        self.transformations = transformations
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         super.init(collectionViewLayout: layout)
         
         // Configure the collection view appearance
         collectionView.backgroundColor = .white
-        
         title = "\(hero.name)'s Transformations"
     }
     
@@ -37,77 +35,85 @@ final class TransformationsViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureCollectionView()
         
+        configureCollectionView()
         fetchData()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        adjustCollectionViewLayout()
+        
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            layout.minimumInteritemSpacing = 20
+            layout.minimumLineSpacing = 20
+            
+            guard collectionView.bounds.width > 0 else {
+                print("Invalid collection view width: \(collectionView.bounds.width)")
+                return
+            }
+            
+            let totalSpacing = layout.minimumInteritemSpacing * 2 + layout.sectionInset.left + layout.sectionInset.right
+            let itemWidth = (collectionView.bounds.width - totalSpacing) / 2
+            
+            guard itemWidth > 0 else {
+                print("Invalid item width: \(itemWidth)")
+                return
+            }
+            
+            layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
+            
+        }
     }
     
     private func configureCollectionView() {
+        // Register cell
         collectionView.register(UINib(nibName: "TransformationsCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "TransformationsCell")
         
+        // Set up data source
         dataSource = DataSource(collectionView: collectionView) { collectionView, indexPath, transformation in
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TransformationsCell", for: indexPath) as! TransformationsCollectionViewCell
+            // Configure the cell with hero and transformation data
             cell.configure(with: transformation)
             return cell
         }
-        
         collectionView.dataSource = dataSource
     }
     
     private func fetchData() {
-        model.getTransformations { [weak self] (result: Result<[HeroTransformation], DragonBallError>) in
-               
-               switch result {
-               case let .success(transformations):
-                   print("Transformations: \(transformations)")
-
-                   // Imprime la respuesta del servidor antes de la decodificación
-                   if let data = try? JSONSerialization.data(withJSONObject: transformations, options: .prettyPrinted),
-                      let jsonString = String(data: data, encoding: .utf8) {
-                       print("Server Response JSON:\n\(jsonString)")
-                   }
-
-                   var snapshot = Snapshot()
-                   snapshot.appendSections([0])
-                   snapshot.appendItems(transformations, toSection: 0)
-                   self?.dataSource?.apply(snapshot, animatingDifferences: true)
-                   
-               case let .failure(error):
-                   print("Error fetching transformations: \(error)")
-                   // Handle the error appropriately, e.g., show an alert to the user
-               }
-           }
-       }
-    
-    private func adjustCollectionViewLayout() {
-        guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else {
-            return
+        let heroID = self.hero.id
+        if !heroID.isEmpty {
+            
+            model.getTransformations(id: heroID) { [weak self] result in
+                switch result {
+                case let .success(transformations):
+                    var snapshot = Snapshot()
+                    snapshot.appendSections([0])
+                    snapshot.appendItems(transformations)
+                    
+                    // Limpia la colección antes de aplicar el nuevo snapshot
+                    self?.dataSource?.apply(snapshot, animatingDifferences: false)
+                    
+                case let .failure(error):
+                    print("Error fetching transformations: \(error)")
+                }
+            }
+        } else {
+            print("Error: el ID del héroe es nulo")
         }
-        
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        layout.minimumInteritemSpacing = 20
-        layout.minimumLineSpacing = 20
-        
-        // Asegúrate de que el ancho de la colección sea mayor que cero
-        guard collectionView.bounds.width > 0 else {
-            return
-        }
-        
-        // Calcula el ancho del elemento teniendo en cuenta el espaciado y el borde
-        let totalSpacing = layout.minimumInteritemSpacing * 2 + layout.sectionInset.left + layout.sectionInset.right
-        let itemWidth = (collectionView.bounds.width - totalSpacing) / 2
-        
-        // Asegúrate de que el ancho de la celda sea mayor que cero
-        guard itemWidth > 0 else {
-            return
-        }
-        
-        // Ajusta la altura según sea necesario
-        layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
     }
 }
+extension TransformationsViewController {
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            guard let selectedTransformation = dataSource?.itemIdentifier(for: indexPath) else {
+                return
+            }
+
+            // Crear instancia de TDetailViewController y pasar la transformación
+            let detailViewController = TDetailViewController(transform: selectedTransformation)
+            // Utiliza el UINavigationController proporcionado para la navegación
+            navigationController?.pushViewController(detailViewController, animated: true)
+        }
+    }
+

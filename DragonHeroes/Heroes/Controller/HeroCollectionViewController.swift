@@ -36,11 +36,7 @@ final class HeroCollectionViewController: UICollectionViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
-            print("View Did Load: Collection View Width: \(collectionView.bounds.width)")
-            let backgroundImage = UIImageView(image: UIImage(named: "fondo6"))
-            backgroundImage.contentMode = .scaleAspectFill
-            collectionView.backgroundView = backgroundImage
-
+            
             configureCollectionView()
             fetchData()
         }
