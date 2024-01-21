@@ -27,35 +27,30 @@ final class LoginViewController: UIViewController {
     }
 
     // MARK: - Actions
-    @IBAction func buttonTouchCancel(_ sender: Any) {
-        zoomOut()
-    }
-    
-    @IBAction func buttonTouchDown(_ sender: Any) {
-        zoomIn()
-    }
-    
+
     
     @IBAction func didTapContinueButton(_ sender: Any) {
         zoomOut()
-        let heroesListVC = HeroCollectionViewController()
-        navigationController?.pushViewController(heroesListVC, animated: true);
-        model.login(
-            user: emailTextField.text ?? "",
-            password: passwordTextField.text ?? ""
-        ) { [weak self] result in
-//            guard let self else { return }
-            switch result {
+            model.login(
+                user: emailTextField.text ?? "",
+                password: passwordTextField.text ?? ""
+            ) { [weak self] result in
+                switch result {
                 case let .success(token):
                     DispatchQueue.main.async {
-                        let heroesListViewController = UIViewController()
-                        self?.navigationController?.setViewControllers([heroesListViewController], animated: true)
+                        let heroesListVC = HeroCollectionViewController()
+                        // Utiliza el controlador de navegación existente
+                        if let navigationController = self?.navigationController {
+                            navigationController.setViewControllers([heroesListVC], animated: true)
+                        } else {
+                            print("Error: No se encontró el controlador de navegación.")
+                        }
                     }
                 case let .failure(error):
                     print("🔴 \(error)")
+                }
             }
         }
-    }
     func loginUser() {
 
         guard let email = emailTextField.text,

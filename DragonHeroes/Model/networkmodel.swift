@@ -126,28 +126,34 @@ final class NetworkModel {
             }*/
         
         }
-    func getTransformations(completion: @escaping (Result<[HeroTransformation], DragonBallError>)->Void){
+    func getTransformations(completion: @escaping (Result<[HeroTransformation], DragonBallError>) -> Void){
         var components = baseComponents
-        components.path = "/api/heros/tranformations"
-        guard let url = components.url else{
-            completion(.failure(.malformedURL))
-            return
-        }
-        guard let token else{
-            completion(.failure(.unknown))
-            return
-        }
+            components.path = "/api/heros/tranformations"
+
+            guard let url = components.url else {
+                completion(.failure(.malformedURL))
+                return
+            }
+        print("Request URL: \(url)")
+            guard let token = token else {
+                completion(.failure(.unknown))
+                return
+            }
+        
+            
         var urlComponents = URLComponents()
-        urlComponents.queryItems = [URLQueryItem(name: "name", value: "")]
+        urlComponents.queryItems = [URLQueryItem(name: "id", value: "")]
+
+            var urlRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "POST"
+            urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            urlRequest.httpBody = urlComponents.query?.data(using: .utf8)
+
+            client.request(urlRequest, using: [HeroTransformation].self) { result in
+                completion(result)
+            }
         
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        // Encodificamos el query item de url components
-        urlRequest.httpBody = urlComponents.query?.data(using: .utf8)
-        
-        client.request(urlRequest, using: [HeroTransformation].self, completion: completion)
-    }
+        }
     func fetchData(completion: @escaping (Result<Data, DragonBallError>) -> Void) {
         var components = baseComponents
         guard let url = components.url else {

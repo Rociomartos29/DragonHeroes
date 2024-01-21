@@ -14,36 +14,53 @@ class HDetailViewController: UIViewController {
     @IBOutlet weak var DescripcionHero: UILabel!
     @IBOutlet weak var transformationsButton: UIButton!
     var hero: DragonBallHero!
+    let model = NetworkModel.shared
+    
     init(hero: DragonBallHero, transformations: [HeroTransformation]) {
-        // Código de inicialización aquí
         super.init(nibName: nil, bundle: nil)
-        self.hero = hero // Llamada al inicializador designado de UIViewController
+        self.hero = hero
     }
     
-    // Inicializador requerido para conformar al protocolo NSCoding
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        // Inicialización personalizada, si es necesario
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        ///if hero.transformations.isEmpty {
-        /// transformationsButton.isHidden = true
+        // Configurar la vista con los datos del héroe
+        configureView()
     }
     
-    func showTransformationsTapped() {
-        
-        /* let transformationsListVC = TransformacionesListTableViewController()
-         transformationsListVC.hero = hero
-         
-         navigationController?.pushViewController(transformationsListVC, animated: true)
-         
-         }
-         /*
-          
-          }
-          */*/
+    func configureView() {
+        // Aquí deberías configurar tus elementos de la interfaz de usuario con los datos del héroe
+        guard let url = URL(string: hero.photo) else {
+            print("Invalid image URL: \(hero.photo)")
+            return
+        }
+        ImagenHero.loadImage(from: url)
+        NombreHero.text = hero.name
+        DescripcionHero.text = hero.description
     }
     
+    @IBAction func transformationsButtonTapped(_ sender: UIButton) {
+        // Manejar la acción del botón de transformaciones
+        showTransformations()
+    }
+    
+    func showTransformations() {
+        // Solicitar las transformaciones para el héroe actual
+        model.getTransformations{ [weak self] result in
+            switch result {
+            case let .success(transformations):
+                // Crear instancia de TransformationsViewController y pasar el héroe y las transformaciones
+                DispatchQueue.main.async { [weak self] in
+                    let transformationsListVC = TransformationsViewController(hero: self!.hero, transformations: transformations)
+                    self?.navigationController?.pushViewController(transformationsListVC, animated: true)
+                }
+                
+            case let .failure(error):
+                print("Error fetching transformations: \(error)")
+            }
+        }
+    }
 }

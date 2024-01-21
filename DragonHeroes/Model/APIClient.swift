@@ -60,42 +60,36 @@ struct APIClient: APIClientProtocol {
         completion: @escaping (Result<T, DragonBallError>) -> Void
     ) {
         session.dataTask(with: request) { data, response, error in
-            let result: Result<T, DragonBallError>
-            
-            defer {
-                completion(result)
-            }
-            
             guard error == nil else {
                 if let error = error as? NSError,
                    let error = DragonBallError.error(for: error.code) {
-                    result = .failure(error)
+                    completion(.failure(error))
                 } else {
-                    result = .failure(.unknown)
+                    completion(.failure(.unknown))
                 }
                 return
             }
-            
+
             guard let data else {
-                result = .failure(.noData)
+                completion(.failure(.noData))
                 return
-                
             }
+
             print(String(data: data, encoding: .utf8))
-            
+
             let statusCode = (response as? HTTPURLResponse)?.statusCode
-            
+
             guard statusCode == 200 else {
-                result = .failure(.statusCode(code: statusCode))
+                completion(.failure(.statusCode(code: statusCode)))
                 return
             }
-            
+
             guard let resource = try? JSONDecoder().decode(T.self, from: data) else {
-                result = .failure(.decodingFailed)
+                completion(.failure(.decodingFailed))
                 return
             }
-            
-            result = .success(resource)
+
+            completion(.success(resource))
         }
         .resume()
     }
